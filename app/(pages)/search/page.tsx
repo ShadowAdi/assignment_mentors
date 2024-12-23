@@ -31,9 +31,6 @@ const SearchPage = () => {
     Record<number, InterestType[]>
   >({});
 
-  if (!authenticated) {
-    window.location.href = "/login";
-  }
 
   const [loading, setLoading] = useState(true);
   const searchParams = useSearchParams();
@@ -139,6 +136,13 @@ const SearchPage = () => {
     }
     setLoading(false);
   }, [users]);
+
+  useEffect(() => {
+    if (!authenticated && typeof window !== "undefined") {
+      window.location.href = "/login";
+    }
+  }, [authenticated]);
+  
 
   return (
     <main className="flex flex-col items-center w-full min-h-screen justify-start">
