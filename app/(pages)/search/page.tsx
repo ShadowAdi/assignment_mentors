@@ -21,7 +21,7 @@ import { useContextHook } from "@/context/UserContext";
 import { UserRole } from "@/lib/types";
 import { User } from "@prisma/client";
 import { useSearchParams } from "next/navigation";
-import React, { useEffect, useState } from "react";
+import React, { Suspense, useEffect, useState } from "react";
 
 const SearchPage = () => {
   const [users, setUsers] = useState<User[]>([]);
@@ -147,6 +147,7 @@ const SearchPage = () => {
   return (
     <main className="flex flex-col items-center w-full min-h-screen justify-start">
       <Search />
+      <Suspense fallback={<Skeleton className="w-full h-[100px] bg-gray-300" />}>
       <div className="flex flex-col w-full gap-3 items-start justify-normal my-5">
         <h1 className="text-lg font-semibold">Searched Data</h1>
         {!loading ? (
@@ -246,6 +247,7 @@ const SearchPage = () => {
           </div>
         )}
       </div>
+      </Suspense>
     </main>
   );
 };
