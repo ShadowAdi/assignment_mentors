@@ -47,22 +47,22 @@ const formSchema = z.object({
 
 const UpdateProfileForm = () => {
   const [pageLoading, setPageLoading] = useState(true);
-
   const [availableSkills, setAvailableSkills] = useState<Skill[] | null>(null);
   const [availableInterests, setAvailableInterests] = useState<
     Interest[] | null
   >(null);
-
   const [userSkills, setUserSkills] = useState<Skill[] | null>(null);
   const [userInterests, setUserInterests] = useState<Interest[] | null>(null);
 
   const { toast } = useToast();
   const router = useRouter();
-  const { user, setUser,authenticated } = useContextHook();
+  const { user, setUser, authenticated } = useContextHook();
 
-  if (!authenticated) {
-    window.location.href="/login"
-  }
+  useEffect(() => {
+    if (!authenticated) {
+      router.push("/login");
+    }
+  }, [authenticated, router]);
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -74,10 +74,20 @@ const UpdateProfileForm = () => {
     },
   });
 
+  // Add early return for unauthenticated state
+  if (!authenticated) {
+    return null; // Return null initially to prevent flash of content
+  }
+
+  if (pageLoading) {
+    return (
+      <div className="flex items-center justify-center p-8">Loading...</div>
+    );
+  }
+
   useEffect(() => {
     const fetchAvailableData = async () => {
       try {
-
         const [skillsData, interestsData] = await Promise.all([
           GetSkills(),
           GetInterests(),
@@ -91,7 +101,7 @@ const UpdateProfileForm = () => {
           description: "Failed to load skills and interests",
           variant: "destructive",
         });
-      } 
+      }
     };
 
     fetchAvailableData();
@@ -163,12 +173,6 @@ const UpdateProfileForm = () => {
     }
   };
 
-  if (pageLoading) {
-    return (
-      <div className="flex items-center justify-center p-8">Loading...</div>
-    );
-  }
-
   if (!user?.id) {
     return (
       <div className="flex items-center justify-center p-8">
@@ -176,7 +180,6 @@ const UpdateProfileForm = () => {
       </div>
     );
   }
-
   return (
     <div className="w-[90%] mx-auto p-6 flex flex-col items-center justify-center">
       <h1 className="text-2xl font-bold mb-6 ">Update Profile</h1>
