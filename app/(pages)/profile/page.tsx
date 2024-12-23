@@ -140,11 +140,27 @@ const Profile = () => {
       GetPendingRequestsProfile(user.id);
       GetActiveConnections(user.id);
 
-      // Fetch mentors or mentees based on user role
       if (user.role === "MENTEE") {
-        GetMentorshipsProfile(user.id); // Fetch mentors for the mentee
+        GetMentorshipsProfile(user.id);
       } else if (user.role === "MENTOR") {
-        GetMenteesProfile(user.id); // Fetch mentees for the mentor
+        GetMenteesProfile(user.id);
+      }
+    }
+  }, [
+    user,
+    GetNotifications,
+    GetPendingRequestsProfile,
+    GetActiveConnections,
+    GetMentorshipsProfile,
+    GetMenteesProfile,
+  ]);
+
+  useEffect(() => {
+    if (user) {
+      if (user.role === "MENTEE") {
+        GetMentorshipsProfile(user.id);
+      } else if (user.role === "MENTOR") {
+        GetMenteesProfile(user.id);
       }
     }
   }, [user]);
@@ -261,9 +277,11 @@ const Profile = () => {
       GetUserInterests(user.id);
     }
   }, [user]);
-
   if (!authenticated) {
-    window.location.href = "/login";
+    if (typeof window !== "undefined") {
+      window.location.href = "/login";
+    }
+    return null; // Prevent rendering
   }
 
   return (
@@ -428,10 +446,7 @@ const Profile = () => {
             })}
         </TabsContent>
 
-        <TabsContent
-          className="flex  gap-3 items-start mt-2"
-          value="interests"
-        >
+        <TabsContent className="flex  gap-3 items-start mt-2" value="interests">
           {userInterests &&
             userInterests.map((userInterest, i) => {
               return (
@@ -526,7 +541,10 @@ const Profile = () => {
             <div className="flex flex-col gap-3 ">
               {activeConnections.map((connection, i) => {
                 return (
-                  <Card key={i} className="p-4 flex flex-col  items-start gap-3">
+                  <Card
+                    key={i}
+                    className="p-4 flex flex-col  items-start gap-3"
+                  >
                     <CardTitle>Connections</CardTitle>
                     <div className="flex flex-col px-0 gap-4 items-start">
                       <div className="flex gap-3 items-center">
