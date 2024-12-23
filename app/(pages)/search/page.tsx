@@ -1,3 +1,4 @@
+"use client";
 import SearchPage from "@/components/shared/SearcPage";
 import { UserRole } from "@/lib/types";
 import { useSearchParams } from "next/navigation";
