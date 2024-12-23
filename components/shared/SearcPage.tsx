@@ -20,18 +20,18 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { useContextHook } from "@/context/UserContext";
 import { UserRole } from "@/lib/types";
 import { User } from "@prisma/client";
-import React, { useEffect, useState } from "react";
+import React, { Suspense, useEffect, useState } from "react";
 
 const SearchPage = ({
   searchQuery,
   skillsFilter,
   interestsFilter,
-  role,
+  role
 }: {
   searchQuery: string;
   skillsFilter: number[];
   interestsFilter: number[];
-  role: UserRole | undefined;
+  role:UserRole|undefined
 }) => {
   const [users, setUsers] = useState<User[]>([]);
   const { authenticated, user } = useContextHook();
@@ -136,106 +136,111 @@ const SearchPage = ({
   return (
     <main className="flex flex-col items-center w-full min-h-screen justify-start">
       <Search />
-
-      <div className="flex flex-col w-full gap-3 items-start justify-normal my-5">
-        <h1 className="text-lg font-semibold">Searched Data</h1>
-        {!loading ? (
-          <div className="grid grid-cols-1 w-full py-4 md:grid-cols-3 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-            {users.length > 0 &&
-              users.map((userFromArray) => {
-                return (
-                  <Card
-                    key={userFromArray.id}
-                    className="flex flex-col items-start gap-1 p-5"
-                  >
-                    <CardTitle className="text-2xl font-bold">
-                      {userFromArray.name}
-                    </CardTitle>
-                    <CardDescription className="text-base">
-                      {userFromArray.email}
-                    </CardDescription>
-                    <CardContent className="text-start p-0 py-1 flex flex-col items-start">
-                      {userFromArray.bio && (
-                        <p className="text-base">{userFromArray.bio}</p>
-                      )}
-                      <h5 className="text-[14px] font-semibold mt-1">Skills</h5>
-                      <div className="w-full flex gap-2 flex-wrap">
-                        {userSkills[userFromArray.id]?.map((skill) => (
-                          <Badge
-                            key={skill.id}
-                            className="text-xs font-normal cursor-pointer"
+      <Suspense
+        fallback={<Skeleton className="w-full h-[100px] bg-gray-300" />}
+      >
+        <div className="flex flex-col w-full gap-3 items-start justify-normal my-5">
+          <h1 className="text-lg font-semibold">Searched Data</h1>
+          {!loading ? (
+            <div className="grid grid-cols-1 w-full py-4 md:grid-cols-3 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+              {users.length > 0 &&
+                users.map((userFromArray) => {
+                  return (
+                    <Card
+                      key={userFromArray.id}
+                      className="flex flex-col items-start gap-1 p-5"
+                    >
+                      <CardTitle className="text-2xl font-bold">
+                        {userFromArray.name}
+                      </CardTitle>
+                      <CardDescription className="text-base">
+                        {userFromArray.email}
+                      </CardDescription>
+                      <CardContent className="text-start p-0 py-1 flex flex-col items-start">
+                        {userFromArray.bio && (
+                          <p className="text-base">{userFromArray.bio}</p>
+                        )}
+                        <h5 className="text-[14px] font-semibold mt-1">
+                          Skills
+                        </h5>
+                        <div className="w-full flex gap-2 flex-wrap">
+                          {userSkills[userFromArray.id]?.map((skill) => (
+                            <Badge
+                              key={skill.id}
+                              className="text-xs font-normal cursor-pointer"
+                            >
+                              {skill.name}
+                            </Badge>
+                          ))}
+                        </div>
+                        <h5 className="text-[14px] font-semibold mt-1">
+                          Interests
+                        </h5>
+                        <div className="w-full flex gap-2 flex-wrap">
+                          {userInterests[userFromArray.id]?.map((interest) => (
+                            <Badge
+                              key={interest.id}
+                              className="text-xs font-normal cursor-pointer"
+                            >
+                              {interest.name}
+                            </Badge>
+                          ))}
+                        </div>
+                      </CardContent>
+                      {userFromArray.id !== user?.id &&
+                        user &&
+                        user.role &&
+                        user.role === "MENTEE" && (
+                          <Button
+                            onClick={
+                              () =>
+                                SendRequestForMentorship(
+                                  user.id,
+                                  user.id,
+                                  user.role
+                                ) // Pass the role of the target user
+                            }
+                            className=" px-3 py-1 rounded mt-2"
                           >
-                            {skill.name}
-                          </Badge>
-                        ))}
-                      </div>
-                      <h5 className="text-[14px] font-semibold mt-1">
-                        Interests
-                      </h5>
-                      <div className="w-full flex gap-2 flex-wrap">
-                        {userInterests[userFromArray.id]?.map((interest) => (
-                          <Badge
-                            key={interest.id}
-                            className="text-xs font-normal cursor-pointer"
-                          >
-                            {interest.name}
-                          </Badge>
-                        ))}
-                      </div>
-                    </CardContent>
-                    {userFromArray.id !== user?.id &&
-                      user &&
-                      user.role &&
-                      user.role === "MENTEE" && (
-                        <Button
-                          onClick={
-                            () =>
+                            Send Mentorship Request
+                          </Button>
+                        )}
+                      {userFromArray.id !== user?.id &&
+                        user &&
+                        user.role &&
+                        user.role === "MENTOR" && (
+                          <Button
+                            onClick={() =>
                               SendRequestForMentorship(
                                 user.id,
                                 user.id,
                                 user.role
-                              ) // Pass the role of the target user
-                          }
-                          className=" px-3 py-1 rounded mt-2"
-                        >
-                          Send Mentorship Request
-                        </Button>
-                      )}
-                    {userFromArray.id !== user?.id &&
-                      user &&
-                      user.role &&
-                      user.role === "MENTOR" && (
-                        <Button
-                          onClick={() =>
-                            SendRequestForMentorship(
-                              user.id,
-                              user.id,
-                              user.role
-                            )
-                          }
-                          className=" px-3 py-1 rounded mt-2"
-                        >
-                          Send Collaboration Request
-                        </Button>
-                      )}
-                  </Card>
-                );
-              })}
-            {users.length === 0 && (
-              <div className="flex">
-                <h4>No Items Available</h4>
-              </div>
-            )}
-          </div>
-        ) : (
-          <div className="grid grid-cols-1 w-full py-4 md:grid-cols-3 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-            <Skeleton className="w-[200px] bg-slate-800/50 h-[100px] rounded-md" />
-            <Skeleton className="w-[200px] bg-slate-800/50 h-[100px] rounded-md" />
-            <Skeleton className="w-[200px] bg-slate-800/50 h-[100px] rounded-md" />
-            <Skeleton className="w-[200px] bg-slate-800/50 h-[100px] rounded-md" />
-          </div>
-        )}
-      </div>
+                              )
+                            }
+                            className=" px-3 py-1 rounded mt-2"
+                          >
+                            Send Collaboration Request
+                          </Button>
+                        )}
+                    </Card>
+                  );
+                })}
+              {users.length === 0 && (
+                <div className="flex">
+                  <h4>No Items Available</h4>
+                </div>
+              )}
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 w-full py-4 md:grid-cols-3 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+              <Skeleton className="w-[200px] bg-slate-800/50 h-[100px] rounded-md" />
+              <Skeleton className="w-[200px] bg-slate-800/50 h-[100px] rounded-md" />
+              <Skeleton className="w-[200px] bg-slate-800/50 h-[100px] rounded-md" />
+              <Skeleton className="w-[200px] bg-slate-800/50 h-[100px] rounded-md" />
+            </div>
+          )}
+        </div>
+      </Suspense>
     </main>
   );
 };
