@@ -35,8 +35,8 @@ Ensure you have the following installed on your system:
 * Clone the repository:
 1). Clone the repository:
 ```
-git clone https://github.com/your-repo.git  
-cd your-project-folder  
+git clone [https://github.com/your-repo.git  ](https://github.com/ShadowAdi/assignment_mentors.git)
+cd assignment-mentors  
 ```
 
 2). Install dependencies:
