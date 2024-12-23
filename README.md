@@ -1,36 +1,66 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Assignment Mentors
 
-## Getting Started
+A modern web application built with Prisma, Next.js, shadcn/ui, and context-based state management. This project is designed for efficiency and user-friendliness, featuring a robust notification system implemented using React Context.
 
-First, run the development server:
+## Features
+* Next.js for server-side rendering and API routes.
+* Prisma as an ORM for efficient database interactions.
+* shadcn/ui for a sleek, accessible UI design.
+* Context API for managing global state, including notifications.
+* Integrated notification system for real-time user updates.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+## Technologies Used
+### Core Stack
+* Next.js: Full-stack React framework.
+* Prisma: Database ORM.
+* shadcn/ui: UI component library for consistent design.
+
+### Additional Tools
+* Context API: For global state and notification handling.
+* Tailwind CSS: For custom styling.
+* TypeScript: Ensures type safety throughout the project.
+
+## Setup and Installation
+
+### Prerequisites
+
+Ensure you have the following installed on your system:
+
+* Node.js (v16 or higher)
+* npm or yarn
+* A database supported by Prisma (e.g., PostgreSQL, MySQL, SQLite)
+
+### Steps
+
+* Clone the repository:
+1). Clone the repository:
+```
+git clone [https://github.com/your-repo.git  ](https://github.com/ShadowAdi/assignment_mentors.git)
+cd assignment-mentors  
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+2). Install dependencies:
+```
+npm install  
+```
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+3). Configure the database:
+* Create a .env file in the root directory.
+* Add your database URL:
+```
+DATABASE_URL=your_database_connection_string  
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+4). Migrate the database:
+```
+npx prisma migrate dev  
+```
 
-## Learn More
+5). Run the development server:
+```
+npm run dev  
+# or  
+yarn dev  
+```
 
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+The app will be accessible at `http://localhost:3000.`
