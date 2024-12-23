@@ -1,0 +1,124 @@
+datasource db {
+   provider = "postgresql"
+   url      = env("DATABASE_URL")
+}
+
+generator client {
+   provider = "prisma-client-js"
+}
+
+// Enum for user roles
+enum UserRole {
+   MENTOR
+   MENTEE
+}
+
+// Enum for request status
+enum RequestStatus {
+   PENDING
+   ACCEPTED
+   DECLINED
+   CANCELLED
+}
+
+// User model with comprehensive profile details
+model User {
+   id       Int      @id @default(autoincrement())
+   email    String   @unique
+   password String
+   name     String
+   bio      String?
+   role     UserRole
+
+   // Relationship fields
+   skills    UserSkill[]
+   interests UserInterest[]
+
+   // Mentorship-related relations
+   sentRequests     MentorshipRequest[] @relation("SentRequests")
+   receivedRequests MentorshipRequest[] @relation("ReceivedRequests")
+   
+   mentorConnections MentorshipConnection[] @relation("MentorConnections")
+   menteeConnections MentorshipConnection[] @relation("MenteeConnections")
+
+   // Notification tracking
+   notifications Notification[]
+
+   // Metadata
+   createdAt DateTime @default(now())
+   updatedAt DateTime @updatedAt
+}
+
+// Skill model with many-to-many relationship
+model Skill {
+   id    Int         @id @default(autoincrement())
+   name  String      @unique
+   users UserSkill[]
+}
+
+// UserSkill junction model to handle many-to-many relationship
+model UserSkill {
+   user    User  @relation(fields: [userId], references: [id], onDelete: Cascade)
+   userId  Int
+   skill   Skill @relation(fields: [skillId], references: [id], onDelete: Cascade)
+   skillId Int
+
+   @@id([userId, skillId])
+}
+
+// Interest model with many-to-many relationship
+model Interest {
+   id    Int            @id @default(autoincrement())
+   name  String         @unique
+   users UserInterest[]
+}
+
+// UserInterest junction model to handle many-to-many relationship
+model UserInterest {
+   user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+   userId     Int
+   interest   Interest @relation(fields: [interestId], references: [id], onDelete: Cascade)
+   interestId Int
+
+   @@id([userId, interestId])
+}
+
+// Mentorship Request model
+model MentorshipRequest {
+   id         Int           @id @default(autoincrement())
+   sender     User          @relation("SentRequests", fields: [senderId], references: [id], onDelete: Cascade)
+   senderId   Int
+   receiver   User          @relation("ReceivedRequests", fields: [receiverId], references: [id], onDelete: Cascade)
+   receiverId Int
+   message    String?
+   status     RequestStatus @default(PENDING)
+
+   createdAt DateTime @default(now())
+   updatedAt DateTime @updatedAt
+
+   @@unique([senderId, receiverId])
+}
+
+// Mentorship Connection model to track active mentorships
+model MentorshipConnection {
+   id        Int       @id @default(autoincrement())
+   mentor    User      @relation("MentorConnections", fields: [mentorId], references: [id], onDelete: Cascade)
+   mentorId  Int
+   mentee    User      @relation("MenteeConnections", fields: [menteeId], references: [id], onDelete: Cascade)
+   menteeId  Int
+   startDate DateTime  @default(now())
+   endDate   DateTime?
+
+   @@unique([mentorId, menteeId])
+}
+
+// Notification model for user updates
+model Notification {
+   id        Int      @id @default(autoincrement())
+   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+   userId    Int
+   content   String
+   type      String
+   isRead    Boolean  @default(false)
+   createdAt DateTime @default(now())
+}
