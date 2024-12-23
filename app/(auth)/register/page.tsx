@@ -65,9 +65,6 @@ const Register = () => {
   const router = useRouter();
   const {authenticated}=useContextHook()
 
-  if (authenticated) {
-    window.location.href="/home"
-  }
 
   const CreateUser = async (
     email: string,
@@ -143,6 +140,11 @@ const Register = () => {
       values.bio
     );
   }
+
+  if (authenticated) {
+    window.location.href="/home"
+  }
+
   return (
     <section className="flex flex-col gap-8 pb-5 my-6 items-center w-screen h-auto justify-center">
       <h1 className="text-4xl font-bold mb-2">Register</h1>

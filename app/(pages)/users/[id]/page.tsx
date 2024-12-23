@@ -1,17 +1,6 @@
 "use client";
 import { GetInterestByUserId } from "@/app/_actions/InterestAction";
-import {
-  GetNotificationOfUser,
-  MarkNotificationAsRead,
-} from "@/app/_actions/NotificationAction";
-import {
-  CancelMentorShipConnection,
-  CancelMentorShipConnectionByMentor,
-  GetActiveMentorships,
-  GetPendingRequests,
-  ReceivedRequest,
-  SentRequests,
-} from "@/app/_actions/SentRequestAction";
+import { SentRequests } from "@/app/_actions/SentRequestAction";
 import { GetSkillByUserId } from "@/app/_actions/SkillAction";
 import {
   GetMenteeBasedOnUser,
@@ -20,12 +9,6 @@ import {
 } from "@/app/_actions/UserAction";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardDescription,
-  CardFooter,
-  CardTitle,
-} from "@/components/ui/card";
 import {
   Dialog,
   DialogContent,
@@ -36,16 +19,9 @@ import {
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useContextHook } from "@/context/UserContext";
 import { useToast } from "@/hooks/use-toast";
-import { RequestStatus } from "@/lib/types";
-import {
-  MentorshipConnection,
-  MentorshipRequest,
-  User,
-  UserRole,
-} from "@prisma/client";
+import { MentorshipConnection, User } from "@prisma/client";
 import Link from "next/link";
-import { useParams, usePathname } from "next/navigation";
-import { useRouter } from "next/router";
+import { useParams } from "next/navigation";
 import React, { useEffect, useState } from "react";
 type SkillType = {
   id: number;

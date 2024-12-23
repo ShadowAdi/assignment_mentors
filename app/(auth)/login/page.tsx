@@ -32,10 +32,6 @@ const Login = () => {
   const router = useRouter();
   const { setUser, setIsAuthenticated, authenticated } = useContextHook();
 
-  if (authenticated) {
-    window.location.href = "/home";
-  }
-
   const loginUser = async (email: string, password: string) => {
     const { success, User, message, token } = await LoginUser(email, password);
     if (!success) {
@@ -76,6 +72,10 @@ const Login = () => {
   });
   function onSubmit(values: z.infer<typeof formSchema>) {
     loginUser(values.email, values.password);
+  }
+
+  if (authenticated) {
+    window.location.href = "/home";
   }
   return (
     <section className="flex flex-col gap-8 items-center w-screen h-screen justify-center">
