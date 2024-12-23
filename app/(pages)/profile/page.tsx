@@ -134,37 +134,6 @@ const Profile = () => {
     setUserMentees(transformedData);
   };
 
-  useEffect(() => {
-    if (user && user.id) {
-      GetNotifications(user.id);
-      GetPendingRequestsProfile(user.id);
-      GetActiveConnections(user.id);
-
-      if (user.role === "MENTEE") {
-        GetMentorshipsProfile(user.id);
-      } else if (user.role === "MENTOR") {
-        GetMenteesProfile(user.id);
-      }
-    }
-  }, [
-    user,
-    GetNotifications,
-    GetPendingRequestsProfile,
-    GetActiveConnections,
-    GetMentorshipsProfile,
-    GetMenteesProfile,
-  ]);
-
-  useEffect(() => {
-    if (user) {
-      if (user.role === "MENTEE") {
-        GetMentorshipsProfile(user.id);
-      } else if (user.role === "MENTOR") {
-        GetMenteesProfile(user.id);
-      }
-    }
-  }, [user]);
-
   const CancelMentorsipMentee = async (
     senderId: number,
     receiverId: number
@@ -273,15 +242,32 @@ const Profile = () => {
 
   useEffect(() => {
     if (user && user.id) {
-      GetUserSkills(user.id);
-      GetUserInterests(user.id);
+      GetNotifications(user.id);
+      GetPendingRequestsProfile(user.id);
+      GetActiveConnections(user.id);
+      GetUserSkills(user.id)
+      GetUserInterests(user.id)
+
+      if (user.role === "MENTEE") {
+        GetMentorshipsProfile(user.id);
+      } else if (user.role === "MENTOR") {
+        GetMenteesProfile(user.id);
+      }
     }
-  }, [user]);
+  }, [
+    user,
+    GetNotifications,
+    GetPendingRequestsProfile,
+    GetActiveConnections,
+    GetMentorshipsProfile,
+    GetMenteesProfile,
+  ]);
+
   if (!authenticated) {
     if (typeof window !== "undefined") {
       window.location.href = "/login";
     }
-    return null; // Prevent rendering
+    return null;
   }
 
   return (
