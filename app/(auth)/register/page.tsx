@@ -219,18 +219,16 @@ const Register = () => {
               name="bio"
               render={({ field }) => (
                 <FormItem className="w-full ">
-                  <FormLabel>Name</FormLabel>
+                  <FormLabel>Bio</FormLabel>
                   <FormControl>
                     <Textarea
                       className="px-5 py-2 w-full  border-black"
-                      placeholder="Aditya"
+                      placeholder="Good Bio"
                       rows={3}
                       {...field}
                     />
                   </FormControl>
-                  <FormDescription>
-                    This is your public display name.
-                  </FormDescription>
+              
                   <FormMessage />
                 </FormItem>
               )}
