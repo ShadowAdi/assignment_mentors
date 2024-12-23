@@ -26,6 +26,7 @@ import { useContextHook } from "@/context/UserContext";
 import { Button } from "../ui/button";
 import { Skeleton } from "../ui/skeleton";
 import { useToast } from "@/hooks/use-toast";
+import Link from "next/link";
 
 const UserSlider = ({
   type,
@@ -175,12 +176,14 @@ const UserSlider = ({
                     className="md:basis-1/2 lg:basis-1/3"
                   >
                     <Card className="flex flex-col items-start gap-1 p-3">
+                      <Link href={`/users/${userFromArray.id}`}>
                       <CardTitle className="text-2xl font-bold">
                         {userFromArray.name}
                       </CardTitle>
                       <CardDescription className="text-base">
                         {userFromArray.email}
                       </CardDescription>
+                      </Link>
                       <CardContent className="text-start p-0 py-2 flex flex-col items-start">
                         {userFromArray.bio && (
                           <p className="text-base">{userFromArray.bio}</p>
