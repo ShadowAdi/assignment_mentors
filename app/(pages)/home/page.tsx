@@ -9,7 +9,7 @@ import { useContextHook } from "@/context/UserContext";
 import { MentorshipConnection, User } from "@prisma/client";
 import React, { useEffect, useState } from "react";
 
-const page = () => {
+const HomePage = () => {
   const { user } = useContextHook();
 
   const [userMentors, setUserMentors] = useState<
@@ -54,4 +54,4 @@ const page = () => {
   );
 };
 
-export default page;
+export default HomePage;
