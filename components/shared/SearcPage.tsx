@@ -20,19 +20,23 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { useContextHook } from "@/context/UserContext";
 import { UserRole } from "@/lib/types";
 import { User } from "@prisma/client";
+import { useSearchParams } from "next/navigation";
 import React, { Suspense, useEffect, useState } from "react";
 
-const SearchPage = ({
-  searchQuery,
-  skillsFilter,
-  interestsFilter,
-  role
-}: {
-  searchQuery: string;
-  skillsFilter: number[];
-  interestsFilter: number[];
-  role:UserRole|undefined
-}) => {
+const SearchPage = () => {
+    const searchParams = useSearchParams();
+      const searchQuery = searchParams.get("searchQuery") || "";
+      const skillsFilter: number[] = searchParams.get("skillsFilter")
+        ? searchParams.get("skillsFilter")!.split(",").map(Number)
+        : [];
+      const interestsFilter: number[] = searchParams.get("interestsFilter")
+        ? searchParams.get("interestsFilter")!.split(",").map(Number)
+        : [];
+      const roleParam = searchParams.get("role") || "";
+      const role: UserRole | undefined =
+        roleParam === UserRole.MENTOR || roleParam === UserRole.MENTEE
+          ? (roleParam as UserRole)
+          : undefined;
   const [users, setUsers] = useState<User[]>([]);
   const { authenticated, user } = useContextHook();
   const [userSkills, setUserSkills] = useState<Record<number, SkillType[]>>({});
