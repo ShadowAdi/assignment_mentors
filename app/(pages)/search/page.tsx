@@ -46,7 +46,6 @@ const SearchPage = () => {
       ? (roleParam as UserRole)
       : undefined;
 
-  // Fetch users logic
   const getUsers = async () => {
     try {
       const { users } = await GetUsers(
@@ -72,7 +71,36 @@ const SearchPage = () => {
     getUsers();
   }, [searchQuery, skillsFilter, interestsFilter, role]);
 
-  // Fetch skills and interests logic
+  // Send request logic
+  const SendRequestForMentorship = async (
+    currentUserId: number,
+    targetUserId: number,
+    targetUserRole: string // Add role as a parameter
+  ) => {
+    try {
+      if (
+        (user &&
+          user.role &&
+          user.role === "MENTOR" &&
+          targetUserRole === "MENTOR") ||
+        (user &&
+          user.role &&
+          user.role === "MENTEE" &&
+          targetUserRole === "MENTOR")
+      ) {
+        // Send request only if the current user is a MENTOR and the target is a MENTOR
+        // Or if the current user is a MENTEE and the target is a MENTOR
+        const response = await SentRequests(currentUserId, targetUserId);
+        console.log("Request Sent:", response);
+      } else {
+        console.error("Cannot send request: Invalid role combination.");
+      }
+    } catch (error) {
+      console.error("Error sending mentorship request:", error);
+    }
+  };
+
+  // Fetch skills and interests in parallel
   const fetchUserDetails = async () => {
     try {
       const skillsPromises = users.map((user) => GetSkillByUserId(user.id));
@@ -104,12 +132,12 @@ const SearchPage = () => {
     }
     setLoading(false);
   }, [users]);
-
   useEffect(() => {
     if (!authenticated && typeof window !== "undefined") {
       window.location.href = "/login";
     }
   }, [authenticated]);
+
 
   return (
     <main className="flex flex-col items-center w-full min-h-screen justify-start">
