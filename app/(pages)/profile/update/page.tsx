@@ -92,7 +92,6 @@ const UpdateProfileForm = () => {
           GetSkills(),
           GetInterests(),
         ]);
-
         setAvailableSkills(skillsData);
         setAvailableInterests(interestsData);
       } catch (error) {
@@ -105,12 +104,12 @@ const UpdateProfileForm = () => {
     };
 
     fetchAvailableData();
-  }, []);
+  }, [toast]);
 
   useEffect(() => {
-    const fetchUserData = async () => {
-      if (!user?.id) return;
+    if (!user?.id) return;
 
+    const fetchUserData = async () => {
       try {
         const [userSkillsData, userInterestsData] = await Promise.all([
           GetSkillByUserId(user.id),
@@ -140,7 +139,7 @@ const UpdateProfileForm = () => {
     };
 
     fetchUserData();
-  }, [user?.id, form]);
+  }, [user?.id, form, toast]);
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     if (!user?.id) return;
