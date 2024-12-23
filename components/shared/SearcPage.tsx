@@ -66,7 +66,6 @@ const SearchPage = () => {
   };
 
   useEffect(() => {
-    setLoading(true);
     getUsers();
   }, [searchQuery, skillsFilter, interestsFilter, role]);
 
